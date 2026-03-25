@@ -129,11 +129,15 @@ def validate_symbols(symbols_str: str) -> list[str]:
 
 
 def safe_float(value: Any, default: float = 0.0) -> float:
-    """Safely convert value to float."""
+    """Safely convert value to float. Returns default for None, empty, and NaN."""
+    import math
     try:
         if value is None or value == '':
             return default
-        return float(value)
+        result = float(value)
+        if math.isnan(result) or math.isinf(result):
+            return default
+        return result
     except (ValueError, TypeError):
         return default
 
